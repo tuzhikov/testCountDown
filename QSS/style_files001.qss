@@ -1,0 +1,112 @@
+/* -----------------------------------The QSlider widget -----------------------------------*/
+QSlider::groove::vertical {
+                         background: palette(midlight);
+						 border: 1px solid #999999;
+						 width:30px;
+                         margin: 30px 0;
+                         }
+QSlider::handle::vertical {
+                         background: palette(light);
+                         border: 2px solid #999999;
+						 height: 10px;
+						 margin: 0 -5px;
+                         border-radius: 5px;
+                         }
+/* -----------------------------------The ToolBox widget----------------------------------- */
+QToolBox{
+	background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #E0E0E0, stop: 1 #FFFFFF);
+	border: 1px solid gray;
+    border-radius: 5px;
+    margin-top: 1ex; /* leave space at the top for the title */
+	subcontrol-origin: margin;
+    subcontrol-position: top center; 
+	padding: 0 3px;
+}
+QToolBox::tab {
+	 background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+     border-radius: 5px;
+     color: darkgray;
+ }
+QToolBox::tab:selected { /* italicize selected tabs */
+     font: italic;
+     color: blask;
+ }
+ /*-----------------------------------The Tab widget-----------------------------------*/
+ QTabWidget::pane { /* The tab widget frame */
+     border-top: 3px solid #C2C7CB;
+     position: absolute;
+     top: -0.5em;
+ }
+QTabWidget::tab-bar {
+     alignment: center;
+ }
+/* Style the tab using the tab sub-control. Note that
+     it reads QTabBar _not_ QTabWidget */
+QTabBar::tab {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+     border: 2px solid #C4C4C3;
+     border-bottom-color: #C2C7CB; /* same as the pane color */
+     border-top-left-radius: 4px;
+     border-top-right-radius: 4px;
+     min-width: 8ex;
+     padding: 2px;
+ }
+QTabBar::tab:selected, QTabBar::tab:hover {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #fafafa, stop: 0.4 #f4f4f4,
+                                 stop: 0.5 #e7e7e7, stop: 1.0 #fafafa);
+ }
+QTabBar::tab:selected {
+     border-color: #9B9B9B;
+     border-bottom-color: #C2C7CB; /* same as pane color */
+ }
+ /*-----------------------------------QStatusBar-----------------------------------*/
+ QStatusBar {
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+ }
+QStatusBar::item {
+     border: 1px solid grey;
+     border-radius: 3px;
+ }
+/*-----------------------------------QProgressBar-------------------------------------*/
+QProgressBar{
+	background-color: palette(midlight);/*rgb(200, 200, 200);*/
+	border: 1px solid #9B9B9B;
+	border-radius: 3px; 
+}
+QProgressBar::chunk {
+	/*background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E3E3E3, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D9D9D9, stop: 1.0 #999999); *//*palette(midlight);rgb(102, 204, 255);*/
+	 background-color: #05B8CC;/*#999999;/*#05B8CC;*/
+	 border-radius: 3px; 
+} 
+/*-----------------------------------ToolTip-----------------------------------*/
+QToolTip {
+     border: 1px solid darkkhaki;
+     padding: 3px;
+     border-radius: 3px;
+     opacity: 10;
+ }	
+ /*GroupBox*/
+ QGroupBox {
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #E0E0E0, stop: 1 #FFFFFF);
+     border: 1px solid gray;
+     border-radius: 5px;
+     margin-top: 1ex; 
+ }
+ QGroupBox::title {
+     subcontrol-origin: margin;
+     subcontrol-position: top centre; 
+     padding: 0 3px;
+     background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                       stop: 0 #D5D5D5, stop: 1 #FFFFFF);
+ }

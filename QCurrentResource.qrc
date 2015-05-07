@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/ICO">
+        <file>ICO/test.ico</file>
+        <file>ICO/setting.ico</file>
+        <file>ICO/elintel.ico</file>
+        <file>ICO/exit.ico</file>
+        <file>ICO/help.ico</file>
+    </qresource>
+    <qresource prefix="/TR">
+        <file>TR/TestCountDown_en.qm</file>
+    </qresource>
+    <qresource prefix="/QSS">
+        <file>QSS/style_files001.qss</file>
+    </qresource>
+</RCC>
