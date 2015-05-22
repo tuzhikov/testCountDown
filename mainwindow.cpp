@@ -422,7 +422,13 @@ while(leng--)
     pMess++;
     if(*pMess=='$')break;
     }
-return QString::number(CalculCRC,16).toUpper();
+QString result;
+if(CalculCRC<0x10){
+    result = "0"+QString::number(CalculCRC,16).toUpper();
+    }else{
+    result = QString::number(CalculCRC,16).toUpper();
+    }
+return result;
 }
 /*shift left*/
 /*unsigned int left_shift(unsigned int n,unsigned int k) {
