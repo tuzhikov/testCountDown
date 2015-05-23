@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>590</width>
-    <height>628</height>
+    <height>636</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_15">
         <item>
          <widget class="QFrame" name="frameAdr">
@@ -35,7 +35,7 @@
           <property name="frameShadow">
            <enum>QFrame::Plain</enum>
           </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0,0,0">
+          <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,0,0,0,0,0,0">
            <item>
             <spacer name="horizontalSpacer_6">
              <property name="orientation">
@@ -80,6 +80,58 @@
             </widget>
            </item>
            <item>
+            <widget class="QLabel" name="label_12">
+             <property name="text">
+              <string>dec.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLCDNumber" name="lcdNumberAdr">
+             <property name="font">
+              <font>
+               <weight>75</weight>
+               <italic>false</italic>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="mouseTracking">
+              <bool>false</bool>
+             </property>
+             <property name="frameShape">
+              <enum>QFrame::Box</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Sunken</enum>
+             </property>
+             <property name="smallDecimalPoint">
+              <bool>false</bool>
+             </property>
+             <property name="digitCount">
+              <number>2</number>
+             </property>
+             <property name="mode">
+              <enum>QLCDNumber::Hex</enum>
+             </property>
+             <property name="segmentStyle">
+              <enum>QLCDNumber::Flat</enum>
+             </property>
+             <property name="value" stdset="0">
+              <double>1.000000000000000</double>
+             </property>
+             <property name="intValue" stdset="0">
+              <number>1</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>hex.</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <spacer name="horizontalSpacer_4">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -110,7 +162,7 @@
            <attribute name="title">
             <string>Auto Mode</string>
            </attribute>
-           <layout class="QHBoxLayout" name="horizontalLayout">
+           <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,1">
             <item>
              <widget class="QLCDNumber" name="lcdNumber">
               <property name="frameShape">
@@ -139,7 +191,7 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QGroupBox" name="groupBox_2">
+               <widget class="QGroupBox" name="groupBoxRed">
                 <property name="title">
                  <string>Countdown red light.</string>
                 </property>
@@ -165,9 +217,16 @@
                      </property>
                      <property name="maximumTime">
                       <time>
+                       <hour>1</hour>
+                       <minute>0</minute>
+                       <second>0</second>
+                      </time>
+                     </property>
+                     <property name="minimumTime">
+                      <time>
                        <hour>0</hour>
-                       <minute>9</minute>
-                       <second>59</second>
+                       <minute>0</minute>
+                       <second>0</second>
                       </time>
                      </property>
                      <property name="currentSection">
@@ -175,6 +234,16 @@
                      </property>
                      <property name="displayFormat">
                       <string>m:ss</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="checkBoxRedCd">
+                     <property name="text">
+                      <string>Value ON</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -196,8 +265,21 @@
                        <pointsize>12</pointsize>
                       </font>
                      </property>
+                     <property name="minimum">
+                      <number>0</number>
+                     </property>
                      <property name="maximum">
                       <number>255</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="checkBoxRedTime">
+                     <property name="text">
+                      <string>Value ON</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
@@ -207,7 +289,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QGroupBox" name="groupBox_3">
+               <widget class="QGroupBox" name="groupBoxGreen">
                 <property name="title">
                  <string>Countdown green light.</string>
                 </property>
@@ -246,6 +328,16 @@
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <widget class="QCheckBox" name="checkBoxGreenCd">
+                     <property name="text">
+                      <string>Value ON</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
                  </item>
                  <item row="0" column="1">
@@ -269,7 +361,98 @@
                      </property>
                     </widget>
                    </item>
+                   <item>
+                    <widget class="QCheckBox" name="checkBoxGreenTime">
+                     <property name="text">
+                      <string>Value ON</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
                   </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="groupBox">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="title">
+                 <string>Set the brightness.</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+                <property name="flat">
+                 <bool>false</bool>
+                </property>
+                <property name="checkable">
+                 <bool>false</bool>
+                </property>
+                <layout class="QHBoxLayout" name="horizontalLayout_6">
+                 <item>
+                  <widget class="QLabel" name="label_13">
+                   <property name="text">
+                    <string>MIN.</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QSlider" name="horizontalSliderAuto">
+                   <property name="minimumSize">
+                    <size>
+                     <width>0</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                   <property name="toolTipDuration">
+                    <number>-1</number>
+                   </property>
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="maximum">
+                    <number>15</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>15</number>
+                   </property>
+                   <property name="value">
+                    <number>7</number>
+                   </property>
+                   <property name="tracking">
+                    <bool>true</bool>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="invertedAppearance">
+                    <bool>false</bool>
+                   </property>
+                   <property name="invertedControls">
+                    <bool>true</bool>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksBothSides</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>1</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_14">
+                   <property name="text">
+                    <string>MAX.</string>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </widget>
@@ -344,6 +527,16 @@
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxRedTest">
+                  <property name="text">
+                   <string>Value ON</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
@@ -364,6 +557,16 @@
                   </property>
                   <property name="maximum">
                    <number>255</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxRedTestTime">
+                  <property name="text">
+                   <string>Value ON</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -429,6 +632,16 @@
                   </property>
                  </widget>
                 </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxGreenTest">
+                  <property name="text">
+                   <string>Value ON</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
                </layout>
               </item>
               <item>
@@ -449,6 +662,16 @@
                   </property>
                   <property name="maximum">
                    <number>255</number>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="checkBoxGreenTestTime">
+                  <property name="text">
+                   <string>Value ON</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -536,56 +759,171 @@
            <attribute name="title">
             <string>Services Commands</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_16">
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="0">
+             <layout class="QVBoxLayout" name="verticalLayout_21">
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_8">
-                <item>
-                 <widget class="QRadioButton" name="radioButtonSrvGetAdr">
-                  <property name="text">
-                   <string>Get the address:</string>
+               <layout class="QFormLayout" name="formLayout">
+                <property name="horizontalSpacing">
+                 <number>50</number>
+                </property>
+                <property name="verticalSpacing">
+                 <number>10</number>
+                </property>
+                <property name="leftMargin">
+                 <number>10</number>
+                </property>
+                <property name="topMargin">
+                 <number>10</number>
+                </property>
+                <property name="rightMargin">
+                 <number>10</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>10</number>
+                </property>
+                <item row="0" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_8">
+                  <property name="spacing">
+                   <number>10</number>
                   </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <layout class="QGridLayout" name="gridLayout_4">
-                  <item row="0" column="0">
-                   <widget class="QRadioButton" name="radioButtonSvrSetAdr">
-                    <property name="text">
-                     <string>Set the address:</string>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_8">
+                    <property name="spacing">
+                     <number>10</number>
                     </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="1" rowspan="4">
-                   <layout class="QVBoxLayout" name="verticalLayout_13">
                     <item>
-                     <widget class="QSpinBox" name="spinBoxAdrSrvNew">
-                      <property name="minimumSize">
-                       <size>
-                        <width>50</width>
-                        <height>0</height>
-                       </size>
+                     <widget class="QRadioButton" name="radioButtonSvrSetAdr">
+                      <property name="text">
+                       <string>Set the address:</string>
                       </property>
-                      <property name="font">
-                       <font>
-                        <pointsize>12</pointsize>
-                       </font>
-                      </property>
-                      <property name="maximum">
-                       <number>254</number>
-                      </property>
-                      <property name="value">
-                       <number>1</number>
-                      </property>
-                      <property name="displayIntegerBase">
-                       <number>10</number>
+                      <property name="checked">
+                       <bool>true</bool>
                       </property>
                      </widget>
                     </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonGetAdr">
+                      <property name="text">
+                       <string>Get the address:</string>
+                      </property>
+                      <property name="checked">
+                       <bool>false</bool>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_20">
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
+                    <item>
+                     <layout class="QHBoxLayout" name="horizontalLayout_4">
+                      <property name="spacing">
+                       <number>10</number>
+                      </property>
+                      <item>
+                       <widget class="QSpinBox" name="spinBoxAdrSrvNew">
+                        <property name="minimumSize">
+                         <size>
+                          <width>50</width>
+                          <height>0</height>
+                         </size>
+                        </property>
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                         </font>
+                        </property>
+                        <property name="maximum">
+                         <number>254</number>
+                        </property>
+                        <property name="value">
+                         <number>1</number>
+                        </property>
+                        <property name="displayIntegerBase">
+                         <number>10</number>
+                        </property>
+                       </widget>
+                      </item>
+                      <item>
+                       <widget class="QLCDNumber" name="lcdNumberAdrNew">
+                        <property name="font">
+                         <font>
+                          <pointsize>12</pointsize>
+                          <weight>75</weight>
+                          <bold>true</bold>
+                         </font>
+                        </property>
+                        <property name="frameShadow">
+                         <enum>QFrame::Sunken</enum>
+                        </property>
+                        <property name="digitCount">
+                         <number>2</number>
+                        </property>
+                        <property name="mode">
+                         <enum>QLCDNumber::Hex</enum>
+                        </property>
+                        <property name="segmentStyle">
+                         <enum>QLCDNumber::Flat</enum>
+                        </property>
+                        <property name="intValue" stdset="0">
+                         <number>1</number>
+                        </property>
+                       </widget>
+                      </item>
+                     </layout>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_4">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>13</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+                <item row="0" column="1">
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <property name="spacing">
+                   <number>10</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_13">
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonSrvTwo">
+                      <property name="text">
+                       <string>Set flashing time:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonGetFlashTime">
+                      <property name="text">
+                       <string>Get flashing time:</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_19">
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
                     <item>
                      <widget class="QSpinBox" name="spinBoxBlinkSrv">
                       <property name="font">
@@ -598,6 +936,75 @@
                       </property>
                       <property name="value">
                        <number>5</number>
+                      </property>
+                      <property name="displayIntegerBase">
+                       <number>10</number>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <spacer name="verticalSpacer_2">
+                      <property name="orientation">
+                       <enum>Qt::Vertical</enum>
+                      </property>
+                      <property name="sizeHint" stdset="0">
+                       <size>
+                        <width>20</width>
+                        <height>17</height>
+                       </size>
+                      </property>
+                     </spacer>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="0">
+                 <layout class="QHBoxLayout" name="horizontalLayout_7">
+                  <property name="spacing">
+                   <number>10</number>
+                  </property>
+                  <property name="leftMargin">
+                   <number>0</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_18">
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonSrvFour">
+                      <property name="text">
+                       <string>Set the brightness:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonSrvThree">
+                      <property name="text">
+                       <string>Set current:</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_17">
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
+                    <item>
+                     <widget class="QSpinBox" name="spinBoxBrightSrv">
+                      <property name="font">
+                       <font>
+                        <pointsize>12</pointsize>
+                       </font>
+                      </property>
+                      <property name="maximum">
+                       <number>15</number>
+                      </property>
+                      <property name="value">
+                       <number>7</number>
                       </property>
                       <property name="displayIntegerBase">
                        <number>10</number>
@@ -622,67 +1029,41 @@
                       </property>
                      </widget>
                     </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="1">
+                 <layout class="QHBoxLayout" name="horizontalLayout_9">
+                  <property name="spacing">
+                   <number>10</number>
+                  </property>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_16">
+                    <property name="spacing">
+                     <number>10</number>
+                    </property>
                     <item>
-                     <widget class="QSpinBox" name="spinBoxBrightSrv">
-                      <property name="font">
-                       <font>
-                        <pointsize>12</pointsize>
-                       </font>
+                     <widget class="QRadioButton" name="radioButtonSrvTest1">
+                      <property name="text">
+                       <string>Test 1:</string>
                       </property>
-                      <property name="maximum">
-                       <number>15</number>
-                      </property>
-                      <property name="value">
-                       <number>7</number>
-                      </property>
-                      <property name="displayIntegerBase">
-                       <number>10</number>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QRadioButton" name="radioButtonSrvTest2">
+                      <property name="text">
+                       <string>Test 2:</string>
                       </property>
                      </widget>
                     </item>
                    </layout>
                   </item>
-                  <item row="1" column="0">
-                   <widget class="QRadioButton" name="radioButtonSrvTwo">
-                    <property name="text">
-                     <string>Set flashing time:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="2" column="0">
-                   <widget class="QRadioButton" name="radioButtonSrvThree">
-                    <property name="text">
-                     <string>Set current:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="3" column="0">
-                   <widget class="QRadioButton" name="radioButtonSrvFour">
-                    <property name="text">
-                     <string>Set the brightness:</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-                <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0,0,1">
-                  <item>
-                   <widget class="QRadioButton" name="radioButtonSrvTest1">
-                    <property name="text">
-                     <string>Test 1:</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item>
-                   <widget class="QRadioButton" name="radioButtonSrvTest2">
-                    <property name="text">
-                     <string>Test 2:</string>
-                    </property>
-                   </widget>
-                  </item>
                   <item>
                    <layout class="QVBoxLayout" name="verticalLayout_6">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
                     <item>
                      <widget class="QLabel" name="label_9">
                       <property name="text">
@@ -715,49 +1096,49 @@
                </layout>
               </item>
               <item>
-               <spacer name="horizontalSpacer">
+               <spacer name="verticalSpacer_5">
                 <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+                 <enum>Qt::Vertical</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>40</width>
-                  <height>20</height>
+                  <width>20</width>
+                  <height>40</height>
                  </size>
                 </property>
                </spacer>
               </item>
+              <item>
+               <widget class="QPushButton" name="pushButtonWinManual">
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Manual</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="QCurrentResource.qrc">
+                  <normaloff>:/ICO/ICO/test.ico</normaloff>:/ICO/ICO/test.ico</iconset>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
-            <item>
-             <spacer name="verticalSpacer_2">
+            <item row="0" column="1">
+             <spacer name="horizontalSpacer">
               <property name="orientation">
-               <enum>Qt::Vertical</enum>
+               <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>20</width>
-                <height>17</height>
+                <width>69</width>
+                <height>20</height>
                </size>
               </property>
              </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pushButtonWinManual">
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>Manual</string>
-              </property>
-              <property name="icon">
-               <iconset resource="QCurrentResource.qrc">
-                <normaloff>:/ICO/ICO/test.ico</normaloff>:/ICO/ICO/test.ico</iconset>
-              </property>
-             </widget>
             </item>
            </layout>
           </widget>
@@ -1006,6 +1387,166 @@
     <hint type="destinationlabel">
      <x>300</x>
      <y>465</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxRedTest</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>timeEditRedTest</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>304</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>304</x>
+     <y>168</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxGreenTest</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>timeEditGreenTest</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>306</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>306</x>
+     <y>245</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxRedTestTime</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>spinBoxRedTest</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>387</x>
+     <y>195</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>387</x>
+     <y>168</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxGreenTestTime</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>spinBoxGreenTest</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>389</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>389</x>
+     <y>245</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxAdr</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lcdNumberAdr</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>223</x>
+     <y>75</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>316</x>
+     <y>75</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxRedCd</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>timeEditRed</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>368</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>368</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxGreenCd</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>timeEditGreen</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>368</x>
+     <y>326</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>368</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxRedTime</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>spinBoxRed</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>495</x>
+     <y>218</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>495</x>
+     <y>191</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>checkBoxGreenTime</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>spinBoxGreen</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>495</x>
+     <y>326</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>495</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBoxAdrSrvNew</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>lcdNumberAdrNew</receiver>
+   <slot>display(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>173</x>
+     <y>161</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>229</x>
+     <y>161</y>
     </hint>
    </hints>
   </connection>

@@ -87,17 +87,18 @@ switch(stat)
         Close();
         connect(this,SIGNAL(signalStart()),this,SIGNAL(signalStep()),Qt::DirectConnection);
     default:
+        emit signalEnd(true);
         stat = stOpen;
         timerRead->stop();
         emit signalProgressValue(0,false);
         if(retAnswer&(ANWR_PROTOCOL::retOK)) // it is not error
-          emit signalMessageOk(tr("<CENTER><b>Data is written successfully!</CENTER></b>"));
+          emit signalStatusOk(tr("Data is written successfully!"));
         if(retAnswer&ANWR_PROTOCOL::retError) // it is error
-          emit signalMessageError(tr("<CENTER><b>Error response!</CENTER></b>"));
+          emit signalStatusError(tr("Error response!"),false);
         if(retAnswer&ANWR_PROTOCOL::retNoAnsError) // it is error
-          emit signalMessageError(tr("<CENTER><b>Device does not answer!</CENTER></b>"));
+          emit signalStatusError(tr("Device does not answer!"),false);
         if(retAnswer&ANWR_PROTOCOL::retIncorData)
-          emit signalMessageError(tr("<CENTER><b>Data is incorrect!</CENTER></b>"));
+          emit signalStatusError(tr("Data is incorrect!"),false);
         emit signalStep();
         return;        
   }
@@ -163,7 +164,7 @@ if((FT_SUCCESS(ftStatus))||(ftStatus==FT_DEVICE_NOT_OPENED)){
     }else Return=retErr;   // ошибка
 //
 if(counDevice!=1)Return=retChoice; //  нет устройств или найдено не одно
-Return=retOk;
+            else Return=retOk;
 emit signalSearchUsb(itm,numDevice,Return);
 return Return;
 }
@@ -215,12 +216,12 @@ if (hdUSB!=NULL){Close();}
 
 ftStatus=FT_Open(numDevice,&hdUSB);
     if (ftStatus!=FT_OK){
-        emit signalStatusError(tr("Error open USB"));
+        emit signalStatusError(tr("Error open USB"),true);
         return retErr;
         }
 ftStatus=FT_SetUSBParameters(hdUSB,1024,1024);
 if (ftStatus!=FT_OK){// Error setting buffer sizes USB
-    emit signalStatusError(tr("Error setting buffer sizes USB"));
+    emit signalStatusError(tr("Error setting buffer sizes USB"),true);
     return retErr;
     }
 ftStatus = FT_SetTimeouts(hdUSB,10,1);
@@ -263,7 +264,7 @@ if (ftStatus!=FT_OK){
 if ((4096-dwTx)>=(DWORD)leng){// запись, если в выходном буфере есть место
     ftStatus=FT_Write(hdUSB,pdata,leng,nMin);
     if(ftStatus!=FT_OK){
-        emit signalStatusError(tr("Error writing data to USB"));
+        emit signalStatusError(tr("Error writing data to USB"),true);
         return retErr;
         }
     }
@@ -301,7 +302,7 @@ quint16 ftdiChip::Bit9Write(QByteArray &buff, quint16 repet)
             {
             ftStatus=FT_SetDataCharacteristics(hdUSB,FT_BITS_8,FT_STOP_BITS_1,FT_PARITY_MARK);    //  устанавливает FT_PARITY_MARK FT_PARITY_ODD
             if (ftStatus!=FT_OK){
-                    emit signalStatusError(tr("USB write error status"));
+                    emit signalStatusError(tr("USB write error status"),true);
                     return retErr;// error
                     }
             ftStatus=Write(pdata,1,&nmin);
@@ -310,7 +311,7 @@ quint16 ftdiChip::Bit9Write(QByteArray &buff, quint16 repet)
                     }
             ftStatus=FT_SetDataCharacteristics(hdUSB,FT_BITS_8,FT_STOP_BITS_1,FT_PARITY_SPACE);   //  сбрасывает бит FT_PARITY_SPACE FT_PARITY_EVEN
             if (ftStatus!=FT_OK){
-                    emit signalStatusError(tr("USB write error status"));
+                    emit signalStatusError(tr("USB write error status"),true);
                     return retErr;// error
                     }
             pdata++;
@@ -330,13 +331,13 @@ FT_STATUS ftStatus;
 
 ftStatus=FT_SetBaudRate(hdUSB,Speed);
 if (ftStatus){
-    emit signalStatusError(tr("Error setting parameters <speed FTDI>"));
+    emit signalStatusError(tr("Error setting parameters <speed FTDI>"),true);
     return retErr;
     }
 parameter.setSpeed(Speed);
 ftStatus=FT_SetDataCharacteristics(hdUSB,(UCHAR)DataBit,(UCHAR)StopBit,(UCHAR)Parity);
 if (ftStatus!=FT_OK){
-    emit signalStatusError(tr("Error setting parameters <databit FTDI>"));
+    emit signalStatusError(tr("Error setting parameters <databit FTDI>"),true);
     return retErr;
     }
 parameter.setDataBit(DataBit);
@@ -367,7 +368,7 @@ ftStatus = Open();
 if(ftStatus==retOk){
     ftStatus = FT_EE_Read(hdUSB, &ftData);
     if (ftStatus != FT_OK) {
-        emit signalStatusError(tr("Failed to open USB port"));
+        emit signalStatusError(tr("Failed to open USB port"),true);
         return retErr;
         }
     strcpy(ftData.Manufacturer,"ELINTEL");
@@ -381,13 +382,13 @@ if(ftStatus==retOk){
     ftData.Cbus4 = 0x01;
 ftStatus = FT_EE_Program(hdUSB, &ftData);
     if (ftStatus != FT_OK){
-        emit signalStatusError(tr("Error writing flash"));
+        emit signalStatusError(tr("Error writing flash"),true);
         return retErr;
         }
     emit signalStatusOk(tr("Flash is successfully"));
     return retOk;
     }
-emit signalStatusError(tr("Error writing flash"));
+emit signalStatusError(tr("Error writing flash"),true);
 return retErr;
 }
 /*Set number USB*/
@@ -401,7 +402,7 @@ ANWR_PROTOCOL::RETURN_ANSWER ftdiChip::CheckingReceivedPacket(const QByteArray &
 if(bS.isEmpty())return ANWR_PROTOCOL::retNoAnsError;
 QByteArray cmd = bS.simplified();
 if(cmd.contains("#")){
-    if(cmd.contains("<"))return ANWR_PROTOCOL::retOK;
+    if(cmd[1]=='>')return ANWR_PROTOCOL::retOK;
     if(cmd[1]=='?')return ANWR_PROTOCOL::retIncorData;
     }
 return ANWR_PROTOCOL::retError;

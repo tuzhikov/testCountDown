@@ -88,9 +88,10 @@ signals:
     void signalStart();
     void signalStop();
     void signalStep();
+    void signalEnd(const bool);
     void signalSearchUsb(QStringList&,quint16,quint16);
-    void signalSendMessage(const bool,const QByteArray&,const QColor&);
-    void signalStatusError(const QString&);
+    void signalSendMessage(const bool,const QByteArray&,const QColor&); // send protocol
+    void signalStatusError(const QString&,const bool);
     void signalStatusOk(const QString&);
     void signalMessageOk(const QString&);
     void signalMessageError(const QString&);

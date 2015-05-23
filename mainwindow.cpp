@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButtonStart,SIGNAL(clicked()),this,SLOT(on_StartButton()));
     connect(ui->pushButtonWinManual,SIGNAL(clicked()),this,SLOT(on_Manual()));
     connect(timerCount,SIGNAL(timeout()),this,SLOT(on_Progress()));
+    connect(ui->horizontalSliderAuto,SIGNAL(sliderReleased()),this,SLOT(on_setValueBright()));
     /*Connection usb module*/
     connect(usb,SIGNAL(signalSendMessage(bool,QByteArray,QColor)),this,
             SLOT(on_GetMessageOutTextEdit(bool,QByteArray,QColor)));
@@ -31,8 +32,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(usb,SIGNAL(signalSearchUsb(QStringList&,quint16,quint16)),this,
             SLOT(on_USB_choice(QStringList&,quint16,quint16)));
     connect(this,SIGNAL(slNumberUSB(quint64)),usb,SLOT(on_SetNumberUSB(quint64)));
-    connect(usb,SIGNAL(signalStatusError(QString)),this,SLOT(on_SetMessageStatusBarError(QString)));
+    /*massage status bar*/
+    connect(usb,SIGNAL(signalStatusError(QString,bool)),this,
+                SLOT(on_SetMessageStatusBarError(QString,bool)));
     connect(usb,SIGNAL(signalStatusOk(QString)),this,SLOT(on_SetMessageStatusOk(QString)));
+    //connect(usb,SIGNAL(signalMessageError(QString)),this,SLOT(on_SetMessageStatusOk(QString)));
+    /*stop transmitter*/
     connect(usb,SIGNAL(signalStop()),this,SLOT(on_StopButton()));
     /*Create progress bar*/
     progress_status = new QProgressBar(this);
@@ -118,6 +123,26 @@ QMessageBox::about(this, tr("About the program, a countdown"),
                        "<p>The program countdown."
                       ));
 }
+void MainWindow::EnablePanel(const bool enabled)
+{
+if(!enabled){ // button START
+    ui->pushButtonStart->setEnabled(false);
+    ui->pushButtonStop->setEnabled(true);
+    ui->horizontalSliderAuto->setEnabled(true);
+    //ui->tabWidget->setEnabled(false);
+    ui->groupBoxGreen->setEnabled(false);
+    ui->groupBoxRed->setEnabled(false);
+    ui->frameAdr->setEnabled(false);
+    }else{ // button STOP
+    ui->pushButtonStop->setEnabled(false);
+    ui->horizontalSliderAuto->setEnabled(false);
+    ui->pushButtonStart->setEnabled(true);
+    //ui->tabWidget->setEnabled(true);
+    ui->groupBoxGreen->setEnabled(true);
+    ui->groupBoxRed->setEnabled(true);
+    ui->frameAdr->setEnabled(true);
+    }
+}
 /* start button */
 void MainWindow::on_StartButton()
 {
@@ -134,10 +159,7 @@ if(ui->tabWidget->currentIndex()){ // page auto?
     }else{
     timerCount->setInterval(1000);
     timerCount->start();
-    ui->pushButtonStart->setEnabled(false);
-    ui->pushButtonStop->setEnabled(true);
-    ui->tabWidget->setEnabled(false);
-    ui->frameAdr->setEnabled(false);
+    EnablePanel(false);
     }
 }
 /* stop button */
@@ -145,10 +167,7 @@ void MainWindow::on_StopButton()
 {
 usb->stopMessage();
 timerCount->stop();
-ui->pushButtonStop->setEnabled(false);
-ui->pushButtonStart->setEnabled(true);
-ui->tabWidget->setEnabled(true);
-ui->frameAdr->setEnabled(true);
+EnablePanel(true);
 ProgressEnd = true;
 }
 /*CountDown board */
@@ -211,13 +230,13 @@ str = str.trimmed();
 ui->textEditLog->append(str);
 }
 /*Set messages in status bar*/
-void MainWindow::on_SetMessageStatusBarError(const QString &message)
+void MainWindow::on_SetMessageStatusBarError(const QString &message,const bool fShowMin)
 {
 QPalette palette = ui->statusBar->palette();
 palette.setColor(QPalette::WindowText,Qt::red);
 ui->statusBar->setPalette(palette);
 ui->statusBar->showMessage(message,10000);
-QMessageBox::critical(this,tr("Message Error"),message);
+if(fShowMin)QMessageBox::critical(this,tr("Message Error"),message);
 }
 /*Set messages in status bar Ok*/
 void MainWindow::on_SetMessageStatusOk(const QString &message)
@@ -228,9 +247,11 @@ ui->statusBar->setPalette(palette);
 ui->statusBar->showMessage(message,10000);
 }
 /* Choice USB */
-void MainWindow:: on_USB_choice(QStringList& itm,quint16 index,quint16 Result)
+void MainWindow:: on_USB_choice(QStringList& itm,quint16 index,quint16)
 {
-if((Result==ftdiChip::retOk)||(Result==ftdiChip::retChoice)){
+if(!itm.count()){
+    QMessageBox::critical(this,tr("USB failed"),tr("USB/RS485 not found!"));
+    }else{
     bool ok;
     QString item = QInputDialog::getItem(this, tr("Identification USB devices"),
                                         tr("Available USB device"),itm, index, false, &ok);
@@ -243,8 +264,6 @@ if((Result==ftdiChip::retOk)||(Result==ftdiChip::retChoice)){
                 }
             }
         }
-    }else{
-    QMessageBox::critical(this,tr("USB failed"),tr("USB/RS485 not found!"));
     }
 }
 /*set data progress*/
@@ -252,6 +271,16 @@ void MainWindow::on_setValueProgress(const int value, const bool visible)
 {
 progress_status->setVisible(visible);
 progress_status->setValue(value);
+}
+/*Set Bright from Auto*/
+void MainWindow::on_setValueBright()
+{
+ui->horizontalSliderAuto->setEnabled(false);
+QString cmddata;
+CollectDataToSen(cmddata,Qt::red,true);
+QByteArray cmd = cmddata.toLocal8Bit();
+usb->sendMessage(cmd);
+ui->horizontalSliderAuto->setEnabled(true);
 }
 /* show parameter form */
 void MainWindow::ShowParametersForm(const QStringList &strParm)
@@ -266,6 +295,7 @@ SegmentStyleLCD(Qt::green);
 ui->lcdNumber->display(strParm.at(2));
 //visibled button
 ui->pushButtonStop->setEnabled(false);
+ui->horizontalSliderAuto->setEnabled(false);
 }
 /*Create manual windows */
 void MainWindow::on_Manual()
@@ -278,13 +308,21 @@ delete dialog;
 /*Send USB Debug*/
 void MainWindow::on_SendUsbDebug(QString cmd)
 {
+/* Test CRC 16 for another project
+QByteArray cm = QByteArray::fromHex(cmd.toLocal8Bit());
+quint16 crc16 = CRC::Bit16(cm);
+cm.append((char*)&crc16,sizeof(crc16));
+usb->sendMessage(cm);
+*/
 QByteArray cm = cmd.toLocal8Bit();
 usb->sendMessage(cm);
 }
 /* checked HEX or DEC */
-QString MainWindow::StringHEX(const QString str)const
+QString MainWindow::StringHEX(const QString str, const bool visible)const
 {
 QString stres;
+
+if(!visible) return NULL;
 
 if(str!=NULL){
     if(ui->actionHEX->isChecked()){
@@ -304,12 +342,15 @@ return QString::number(sec);
 QString MainWindow::CollectDataToWidgetPageAuto(const int indexcolor)const
 {
 QString message;
+
 if(indexcolor == Qt::green){
-    message ="g "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ConvertTimeToSec(ui->timeEditGreen->time()))
-             +" "+StringHEX(ui->spinBoxGreen->text());
+    message ="g "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ConvertTimeToSec(ui->timeEditGreen->time()),ui->checkBoxGreenCd->isChecked())
+          +" "+StringHEX(ui->spinBoxGreen->text(),ui->checkBoxGreenTime->isChecked());
     }else{
-    message ="w "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ConvertTimeToSec(ui->timeEditRed->time()))
-             +" "+StringHEX(ui->spinBoxRed->text());
+    message ="w "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ConvertTimeToSec(ui->timeEditRed->time()),ui->checkBoxRedCd->isChecked())
+          +" "+StringHEX(ui->spinBoxRed->text(),ui->checkBoxRedTime->isChecked());
     }
 return message;
 }
@@ -319,12 +360,14 @@ QString MainWindow::CollectDataToWidgetPageTest()const
 QString message;
 // test command
 if(ui->radioButtonTestOne->isChecked()){
-    message ="w "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ConvertTimeToSec(ui->timeEditRedTest->time()))
-                    +" "+StringHEX(ui->spinBoxRedTest->text());
+    message ="w "+StringHEX(ui->spinBoxAdr->text())
+         +" "+StringHEX(ConvertTimeToSec(ui->timeEditRedTest->time()),ui->timeEditRedTest->isEnabled())
+         +" "+StringHEX(ui->spinBoxRedTest->text(),ui->spinBoxRedTest->isEnabled());
     }
 if(ui->radioButtonTestTwo->isChecked()){
-    message ="g "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ConvertTimeToSec(ui->timeEditGreenTest->time()))
-                    +" "+StringHEX(ui->spinBoxGreenTest->text());
+    message ="g "+StringHEX(ui->spinBoxAdr->text())
+         +" "+StringHEX(ConvertTimeToSec(ui->timeEditGreenTest->time()),ui->timeEditGreenTest->isEnabled())
+         +" "+StringHEX(ui->spinBoxGreenTest->text(),ui->spinBoxGreenTest->isEnabled());
     }
 if(ui->radioButtonTestThree->isChecked()){
     message ="x "+StringHEX(ui->spinBoxAdr->text());
@@ -345,27 +388,36 @@ QString MainWindow::CollectDataToWidgetPageService()const
 {
 QString message;
 // service command
-if(ui->radioButtonSrvGetAdr->isChecked()){// get adress
-    message ="a "+StringHEX(ui->spinBoxAdr->text());
+if(ui->radioButtonGetAdr->isChecked()){// get adress
+    message ="a "+StringHEX(ui->spinBoxAdr->text())+"  ";
     }
 if(ui->radioButtonSvrSetAdr->isChecked()){// set adress
-    message ="a "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ui->spinBoxAdrSrvNew->text())
-                                                      +" "+StringHEX(ui->spinBoxAdrSrvNew->text());
+    message ="a "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ui->spinBoxAdrSrvNew->text())
+          +" "+StringHEX(ui->spinBoxAdrSrvNew->text());
+    }
+if(ui->radioButtonGetFlashTime->isChecked()){   // get blinked
+    message ="f "+StringHEX(ui->spinBoxAdr->text())+" ";
     }
 if(ui->radioButtonSrvTwo->isChecked()){   // set blinked
-    message ="f "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ui->spinBoxBlinkSrv->text());
+    message ="f "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ui->spinBoxBlinkSrv->text());
     }
 if(ui->radioButtonSrvThree->isChecked()){// set current
-    message ="y "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ui->spinBoxCurrentSrv->text());
+    message ="y "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ui->spinBoxCurrentSrv->text());
     }
 if(ui->radioButtonSrvFour->isChecked()){  // set light
-    message ="b "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ui->spinBoxBrightSrv->text());
+    message ="b "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ui->spinBoxBrightSrv->text());
     }
 if(ui->radioButtonSrvTest1->isChecked()){ // test 1
-    message ="t "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ui->spinBoxTestSvr->text());
+    message ="t "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ui->spinBoxTestSvr->text());
     }
 if(ui->radioButtonSrvTest2->isChecked()){  // test 2
-    message ="T "+StringHEX(ui->spinBoxAdr->text())+" "+StringHEX(ui->spinBoxTestSvr->text());
+    message ="T "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(ui->spinBoxTestSvr->text());
     }
 return message;
 }
@@ -389,18 +441,23 @@ switch(indexpage)
 return message;
 }
 // Collect data to send USB
-void MainWindow::CollectDataToSen(QString &str,const int cdcolor)
+void MainWindow::CollectDataToSen(QString &str,const int cdcolor,const bool split)
 {
 //quint16 CS;
 str.clear();
 if(ui->actionNormal->isChecked())str = "#";
                             else str = "!";
-str +=CollectDataToWidget(ui->tabWidget->currentIndex(),cdcolor);
+if(split){ // collect light for auto mode
+    str +="b "+StringHEX(ui->spinBoxAdr->text())
+          +" "+StringHEX(QString::number(ui->horizontalSliderAuto->value()));
+    }else{ // collect command
+    str +=CollectDataToWidget(ui->tabWidget->currentIndex(),cdcolor);
+    }
 if(ui->actionNormal->isChecked()){
     str.append(" $");
     str.append(ShiftCRC8(str.toLocal8Bit()));
     }
-str  = str.simplified();
+str  = str.trimmed();
 str.append("\r");
 }
 /*ShiftCRC8*/
@@ -430,6 +487,7 @@ if(CalculCRC<0x10){
     }
 return result;
 }
+
 /*shift left*/
 /*unsigned int left_shift(unsigned int n,unsigned int k) {
  unsigned int i,bit;
